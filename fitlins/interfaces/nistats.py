@@ -119,6 +119,7 @@ class FirstLevelModel(NistatsBaseInterface, SimpleInterface):
             add_regs=confounds,
             add_reg_names=confound_names,
             drift_model=drift_model,
+            oversampling=50
             )
 
         # Assume that explanatory variables == HRF-convolved variables
