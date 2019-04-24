@@ -40,7 +40,6 @@ class FirstLevelModelInputSpec(BaseInterfaceInputSpec):
     smoothing_fwhm = traits.Float(desc='Full-width half max (FWHM) in mm for smoothing in mask')
 
 
-
 class FirstLevelModelOutputSpec(TraitedSpec):
     effect_maps = traits.List(File)
     variance_maps = traits.List(File)
@@ -115,7 +114,7 @@ class FirstLevelModel(NistatsBaseInterface, SimpleInterface):
             maps = flm.compute_contrast(weights, contrast_type, output_type='all')
             contrast_metadata.append(
                 {'contrast': name,
-                 'suffix': 'effect',
+                 'stat': 'effect',
                  **out_ents}
                 )
 
@@ -124,7 +123,7 @@ class FirstLevelModel(NistatsBaseInterface, SimpleInterface):
                                        ('z_score', zscore_maps),
                                        ('p_value', pvalue_maps),
                                        ('stat', stat_maps)):
-                fname = fname_fmt(name, map_type)
+                fname = fname_fmt.format(name, map_type)
                 maps[map_type].to_filename(fname)
                 map_list.append(fname)
 
@@ -187,7 +186,7 @@ class SecondLevelModel(NistatsBaseInterface, SimpleInterface):
         filtered_files = []
         names = []
         for m, f in zip(stat_metadata, stat_files):
-            if _match(entities, m):
+            if _match(out_ents, m):
                 filtered_files.append(f)
                 names.append(m['contrast'])
 
@@ -204,7 +203,7 @@ class SecondLevelModel(NistatsBaseInterface, SimpleInterface):
                                           output_type='all')
             contrast_metadata.append(
                 {'contrast': name,
-                 'suffix': 'stat',
+                 'stat': 't',
                  **out_ents})
 
             for map_type, map_list in (('effect_size', effect_maps),
@@ -212,7 +211,7 @@ class SecondLevelModel(NistatsBaseInterface, SimpleInterface):
                                        ('z_score', zscore_maps),
                                        ('p_value', pvalue_maps),
                                        ('stat', stat_maps)):
-                fname = fname_fmt(name, map_type)
+                fname = fname_fmt.format(name, map_type)
                 maps[map_type].to_filename(fname)
                 map_list.append(fname)
 

@@ -211,7 +211,7 @@ def init_fitlins_wf(bids_dir, derivatives, out_dir, analysis_level, space,
                 name=f'ds_{level}_{maptype}_maps')
             for maptype in ('effect', 'variance', 'zscore', 'pvalue')
             }
-        ds_stat_maps
+
         ds_contrast_maps = pe.Node(
             BIDSDataSink(base_directory=out_dir,
                          path_patterns=contrast_pattern),
@@ -264,7 +264,7 @@ def init_fitlins_wf(bids_dir, derivatives, out_dir, analysis_level, space,
                               ('pvalue_maps', 'pvalue_maps'),
                               ('contrast_metadata', 'contrast_metadata')]),
             (collate, plot_contrasts, [('stat_maps', 'data')]),
-            (collate, ds_contrast_maps, [('contrast_maps', 'in_file'),
+            (collate, ds_contrast_maps, [('stat_maps', 'in_file'),
                                          ('contrast_metadata', 'entities')]),
             (collate, ds_contrast_plots, [('contrast_metadata', 'entities')]),
             (plot_contrasts, ds_contrast_plots, [('figure', 'in_file')]),
